@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/media")
-@CrossOrigin(origins = "*")
 public class MediaFilesController {
 
     @Autowired

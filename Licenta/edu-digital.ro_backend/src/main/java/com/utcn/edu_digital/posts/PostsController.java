@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/posts")
-@CrossOrigin(origins = "*")
 public class PostsController {
     @Autowired
     private PostsService postsService;
