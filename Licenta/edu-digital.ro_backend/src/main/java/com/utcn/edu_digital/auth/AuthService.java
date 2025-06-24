@@ -1,7 +1,9 @@
 package com.utcn.edu_digital.auth;
 
+import com.utcn.edu_digital.security.LoginAttemptService;
 import com.utcn.edu_digital.user.User;
 import com.utcn.edu_digital.user.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,6 +22,11 @@ public class AuthService {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private LoginAttemptService loginAttemptService;
+
+
 
     public ResponseEntity<?> register(RegisterRequest request) {
         Optional<User> existing = userRepository.findByEmailOrName(request.getEmail(), request.getName());
@@ -41,14 +48,27 @@ public class AuthService {
     }
 
 
-    public ResponseEntity<?> login(LoginRequest request) {
+    public ResponseEntity<?> login(LoginRequest request, HttpServletRequest httpRequest) {
+        String clientIP = httpRequest.getRemoteAddr();
+        String login = request.getLogin();
+
+        // ✅ Validare simplă email/username - nu conține caractere periculoase
+        if (login.contains("'") || login.contains("\"") || login.contains("--") || login.length() > 100) {
+            return ResponseEntity.badRequest().body("Date introduse nevalide.");
+        }
+
+        if (loginAttemptService.isBlocked(clientIP)) {
+            return ResponseEntity.status(429).body("Prea multe încercări. Încearcă mai târziu.");
+        }
+
         Optional<User> userOpt = userRepository.findByEmailOrName(request.getLogin(), request.getLogin());
 
         if (userOpt.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOpt.get().getPassword())) {
+            loginAttemptService.loginFailed(clientIP);
             return ResponseEntity.status(401).body("Email/Nume sau parolă incorectă");
         }
 
-        String token = jwtService.generateToken(userOpt.get().getEmail());
-        return ResponseEntity.ok(token);
+        loginAttemptService.loginSucceeded(clientIP);
+        return ResponseEntity.ok("Autentificare reușită!");
     }
 }
