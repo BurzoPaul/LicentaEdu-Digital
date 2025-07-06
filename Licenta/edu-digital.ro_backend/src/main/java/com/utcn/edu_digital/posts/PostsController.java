@@ -1,5 +1,7 @@
 package com.utcn.edu_digital.posts;
 
+import com.utcn.edu_digital.posts.PostDTO;
+import com.utcn.edu_digital.posts.PostDetailsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -7,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -20,12 +21,15 @@ public class PostsController {
      * Creează o postare nouă cu fișiere media
      */
     @PostMapping("/create")
-    public ResponseEntity<?> createPost(@RequestParam String title,
-                                        @RequestParam String description,
-                                        @RequestParam(value = "files", required = false) List<MultipartFile> files,
-                                        @RequestParam int userId) {
+    public ResponseEntity<?> createPost(
+            @RequestParam("title") String title,
+            @RequestParam("description") String description,
+            @RequestParam(value = "videoUrl", required = false) String videoUrl,     // ← adăugat
+            @RequestParam(value = "files", required = false) List<MultipartFile> files,
+            @RequestParam("userId") int userId
+    ) {
         try {
-            Posts post = postsService.savePost(title, description, files, userId);
+            Posts post = postsService.savePost(title, description, videoUrl, files, userId);
             return ResponseEntity.ok(post);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Validation error: " + e.getMessage());
@@ -37,6 +41,7 @@ public class PostsController {
             return ResponseEntity.status(500).body("Internal server error: " + e.getMessage());
         }
     }
+
 
     /**
      * Returnează toate postările
@@ -54,22 +59,28 @@ public class PostsController {
         }
     }
 
-
     /**
-     * Returnează o postare după ID
+     * Returnează o postare după ID (inclusiv authorId)
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Posts> getPostById(@PathVariable int id) {
-        try {
-            Optional<Posts> post = postsService.getPostById(id);
-            if (post.isPresent()) {
-                return ResponseEntity.ok(post.get());
-            } else {
-                return ResponseEntity.status(404).build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
-        }
+    public ResponseEntity<PostDetailsDto> getPostById(@PathVariable int id) {
+        return postsService.getPostById(id)
+                .map(post -> {
+                    List<String> urls = post.getMediaFiles().stream()
+                            .map(mf -> "http://localhost:8080/media/" + mf.getId() + "/view")
+                            .toList();
+                    PostDetailsDto dto = new PostDetailsDto(
+                            post.getId(),
+                            post.getTitle(),
+                            post.getDescription(),
+                            post.getUser().getId(),
+                            post.getUser().getName(),
+                            urls,
+                            post.getVideoUrl()    // ← must pass the stored URL here
+                    );
+                    return ResponseEntity.ok(dto);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 
     /**
@@ -88,12 +99,16 @@ public class PostsController {
     /**
      * Actualizează o postare existentă (doar titlu și descriere)
      */
+    // în PostsController.java
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updatePost(@PathVariable int id,
-                                        @RequestParam(required = false) String title,
-                                        @RequestParam(required = false) String description) {
+    public ResponseEntity<?> updatePost(
+            @PathVariable int id,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) String videoUrl   // ← adăugat
+    ) {
         try {
-            Posts updatedPost = postsService.updatePost(id, title, description);
+            Posts updatedPost = postsService.updatePost(id, title, description, videoUrl);
             return ResponseEntity.ok(updatedPost);
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body("Error: " + e.getMessage());
@@ -102,12 +117,15 @@ public class PostsController {
         }
     }
 
+
     /**
      * Adaugă fișiere media la o postare existentă
      */
     @PostMapping("/{id}/add-media")
-    public ResponseEntity<?> addMediaToPost(@PathVariable int id,
-                                            @RequestParam("files") List<MultipartFile> files) {
+    public ResponseEntity<?> addMediaToPost(
+            @PathVariable int id,
+            @RequestParam("files") List<MultipartFile> files
+    ) {
         try {
             Posts updatedPost = postsService.addMediaToPost(id, files);
             return ResponseEntity.ok(updatedPost);
@@ -126,12 +144,13 @@ public class PostsController {
      * Returnează postările pentru un utilizator specific
      */
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Posts>> getPostsByUserId(@PathVariable int userId) {
+    public ResponseEntity<List<PostDTO>> getPostsByUserId(@PathVariable("userId") int userId) {
         try {
-            // Această funcționalitate ar trebui adăugată în PostsService
-            // List<Posts> posts = postsService.getPostsByUserId(userId);
-            // return ResponseEntity.ok(posts);
-            return ResponseEntity.status(501).build(); // Not implemented yet
+            List<Posts> posts = postsService.getPostsByUserId(userId);
+            List<PostDTO> dtos = posts.stream()
+                    .map(PostDTO::new)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(dtos);
         } catch (Exception e) {
             return ResponseEntity.status(500).build();
         }

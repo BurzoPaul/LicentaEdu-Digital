@@ -27,6 +27,8 @@ public class Posts {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "video_url", nullable = true)
+    private String videoUrl;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

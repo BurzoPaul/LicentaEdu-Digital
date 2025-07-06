@@ -38,7 +38,15 @@ public class PostsService {
     @Autowired
     private UserRepository userRepository;
 
-    public Posts savePost(String title, String description, List<MultipartFile> files, int userId) throws IOException {
+    // în PostsService.java
+
+    public Posts savePost(
+            String title,
+            String description,
+            String videoUrl,                 // ← noul parametru
+            List<MultipartFile> files,
+            int userId
+    ) throws IOException {
         // Validări
         if (title == null || title.trim().isEmpty()) {
             throw new IllegalArgumentException("Title cannot be empty");
@@ -51,6 +59,7 @@ public class PostsService {
         Posts post = new Posts();
         post.setTitle(title.trim());
         post.setDescription(description != null ? description.trim() : "");
+        post.setVideoUrl(videoUrl != null ? videoUrl.trim() : null);  // ← setăm videoUrl
         post.setUser(user);
         post = postsRepository.save(post);
 
@@ -60,27 +69,25 @@ public class PostsService {
         if (files != null && !files.isEmpty()) {
             for (MultipartFile file : files) {
                 if (!file.isEmpty()) {
-                    // Validăm fișierul
                     validateFile(file);
 
-                    // Creăm obiectul MediaFile cu datele binare
                     MediaFiles mediaFile = new MediaFiles();
                     mediaFile.setName(file.getOriginalFilename());
                     mediaFile.setType(file.getContentType());
                     mediaFile.setSize(file.getSize());
-                    mediaFile.setData(file.getBytes()); // Salvăm datele binare
+                    mediaFile.setData(file.getBytes());
                     mediaFile.setPost(post);
 
-                    // Salvăm fișierul în baza de date
                     mediaFiles.add(mediaFilesRepository.save(mediaFile));
                 }
             }
         }
 
-        // Asociem fișierele cu postarea și salvăm din nou postarea
+        // Asociem fișierele cu postarea și salvăm din nou
         post.setMediaFiles(mediaFiles);
         return postsRepository.save(post);
     }
+
 
     /**
      * Validează un fișier înainte de salvare
@@ -125,6 +132,10 @@ public class PostsService {
         return postsRepository.findAll();
     }
 
+    public List<Posts> getPostsByUserId(int userId) {
+        return postsRepository.findAllByUserId(userId);
+    }
+
     /**
      * Șterge o postare și fișierele asociate.
      */
@@ -141,20 +152,28 @@ public class PostsService {
     /**
      * Actualizează o postare existentă
      */
-    public Posts updatePost(int id, String title, String description) {
+    public Posts updatePost(
+            int id,
+            String title,
+            String description,
+            String videoUrl    // ← adăugat
+    ) {
         Posts post = postsRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Post not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Post not found"));
 
-        if (title != null && !title.trim().isEmpty()) {
+        if (title != null) {
             post.setTitle(title.trim());
         }
-
         if (description != null) {
             post.setDescription(description.trim());
+        }
+        if (videoUrl != null) {
+            post.setVideoUrl(videoUrl.trim());
         }
 
         return postsRepository.save(post);
     }
+
 
     /**
      * Adaugă fișiere media la o postare existentă

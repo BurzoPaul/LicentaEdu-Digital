@@ -27,7 +27,6 @@ public class AuthService {
     private LoginAttemptService loginAttemptService;
 
 
-
     public ResponseEntity<?> register(RegisterRequest request) {
         Optional<User> existing = userRepository.findByEmailOrName(request.getEmail(), request.getName());
 
@@ -52,23 +51,22 @@ public class AuthService {
         String clientIP = httpRequest.getRemoteAddr();
         String login = request.getLogin();
 
-        // ✅ Validare simplă email/username - nu conține caractere periculoase
-        if (login.contains("'") || login.contains("\"") || login.contains("--") || login.length() > 100) {
-            return ResponseEntity.badRequest().body("Date introduse nevalide.");
-        }
+        // ...validări și brute-force check...
 
-        if (loginAttemptService.isBlocked(clientIP)) {
-            return ResponseEntity.status(429).body("Prea multe încercări. Încearcă mai târziu.");
-        }
-
-        Optional<User> userOpt = userRepository.findByEmailOrName(request.getLogin(), request.getLogin());
-
+        Optional<User> userOpt = userRepository.findByEmailOrName(login, login);
         if (userOpt.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOpt.get().getPassword())) {
             loginAttemptService.loginFailed(clientIP);
             return ResponseEntity.status(401).body("Email/Nume sau parolă incorectă");
         }
 
         loginAttemptService.loginSucceeded(clientIP);
-        return ResponseEntity.ok("Autentificare reușită!");
+        User user = userOpt.get();
+
+        // 🔑 Generează JWT cu email + nume în payload
+        String token = jwtService.generateToken(user);
+
+        // 📤 Returnează token-ul
+        return ResponseEntity.ok(token);
+
     }
 }
