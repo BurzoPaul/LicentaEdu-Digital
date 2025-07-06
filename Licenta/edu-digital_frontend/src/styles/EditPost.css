@@ -1,0 +1,185 @@
+/* Root wrapper pentru pagina de edit */
+.edit-post-page {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+  background-color: #111;
+  color: #fff;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+/* Formular de editare */
+.edit-post-page .edit-post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Câmpul Titlu */
+.edit-post-page .title-field input {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+  background: #222;
+  border: 1px solid #444;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Informații Autor */
+.edit-post-page .author-field {
+  font-style: italic;
+  color: #ccc;
+}
+
+/* Galerie imagini (vechi + noi) */
+.edit-post-page .preview-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+/* Fiecare thumbnail */
+.edit-post-page .preview-item {
+  position: relative;
+  flex: 1 1 calc(33.333% - 8px);
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #222;
+}
+
+/* Imaginea umple complet thumbnail-ul */
+.edit-post-page .preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Buton de ștergere */
+.edit-post-page .remove-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.edit-post-page .remove-btn:hover {
+  background: rgba(255, 0, 0, 0.8);
+}
+
+/* Câmpul Descriere */
+.edit-post-page .description-field textarea {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #fff;
+  background: #222;
+  border: 1px solid #444;
+  border-radius: 4px;
+  resize: vertical;
+  min-height: 120px;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+}
+
+/* Input pentru fișiere noi */
+.edit-post-page .file-input label {
+  font-weight: bold;
+  color: #ccc;
+  display: block;
+}
+
+.edit-post-page .file-input input[type="file"] {
+  margin-top: 0.5rem;
+  display: block;
+}
+
+/* Mesaj de feedback */
+.edit-post-page .feedback {
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.edit-post-page .feedback.success {
+  background-color: #264e36;
+  color: #a3f7a3;
+}
+
+.edit-post-page .feedback.error {
+  background-color: #4e2626;
+  color: #f7a3a3;
+}
+
+/* Buton Salvează */
+.edit-post-page .edit-button {
+  align-self: flex-start;
+  padding: 0.75rem 1.5rem;
+  background-color: #04a2ff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.edit-post-page .edit-button:hover {
+  background-color: #027ccc;
+}
+
+/* YouTube field */
+.edit-post-page .video-field {
+  margin: 1rem 0;
+}
+.edit-post-page .video-field label {
+  font-weight: bold;
+  color: #fff;
+  display: block;
+}
+.edit-post-page .video-field input[type="url"] {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background: #222;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+/* Embedded video preview */
+.edit-post-page .video-preview {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+}
+.edit-post-page .video-preview iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}

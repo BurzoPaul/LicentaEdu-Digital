@@ -1,0 +1,189 @@
+/* src/styles/CreatePostComp.css */
+
+/* Container general identic cu PostDetails */
+.post-details {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* Formular de creare */
+.edit-post-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Titlu */
+.edit-post-form .pd-title input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffffff;
+  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Autor */
+.pd-author {
+  margin: 0 0 1.5rem 0;
+  color: #aaaaaa;
+  font-style: italic;
+}
+
+/* Descriere */
+.edit-post-form .pd-description textarea {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color:#ffffff;
+  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* Feedback */
+.feedback {
+  margin: 1rem 0;
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-weight: bold;
+}
+.feedback.success {
+  background-color: #e0f7e9;
+  color: #064e3b;
+}
+.feedback.error {
+  background-color: #fdecea;
+  color: #611a15;
+}
+
+/* Input fișiere multiple */
+.file-input {
+  margin: 1rem 0;
+}
+.file-input label {
+  font-weight: bold;
+  color: #a6a6a6;
+}
+.file-input input[type="file"] {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+/* Buton Crează postarea */
+.edit-button {
+  align-self: flex-start;
+  padding: 0.75rem 1.5rem;
+  background-color: #04a2ff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.edit-button:hover {
+  background-color: #027ccc;
+}
+
+/* Container identic cu PostDetails */
+.post-details {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* Formular */
+.edit-post-form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* …existing styles… */
+
+.preview-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.preview-item {
+  position: relative;
+  width: calc(33.333% - 8px);
+}
+
+.preview-img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* buton de ștergere în colț */
+.remove-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(0,0,0,0.6);
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  line-height: 1;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.remove-btn:hover {
+  background: rgba(255,0,0,0.8);
+}
+/* YouTube field */
+.video-field {
+  margin: 1rem 0;
+}
+.video-field label {
+  font-weight: bold;
+  color: #fff;
+  display: block;
+}
+.video-field input[type="url"] {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background: #222;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+/* Embedded video preview */
+.video-preview {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.video-preview iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 4px;
+}
+

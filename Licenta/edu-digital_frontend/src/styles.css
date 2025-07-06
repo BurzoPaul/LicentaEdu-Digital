@@ -1,0 +1,104 @@
+/* RESET & BOX-SIZING */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Base */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: #111;
+  color: #eee;
+}
+
+/* Container pentru sidebar + conținut */
+.app-container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 20%;             /* 20% din viewport */
+  min-width: 160px;       /* fallback */
+  max-width: 300px;       /* fallback */
+  height: 100vh;
+  background-color: #202020;
+  color: #fff;
+  padding: 2rem 1rem;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.sidebar h2 {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 0.5rem 0;
+}
+
+/* Link-uri și butoane styled-as-link */
+.sidebar a,
+.sidebar-link {
+  color: #fff;
+  text-decoration: none;
+  background: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.sidebar a:hover,
+.sidebar-link:hover {
+  text-decoration: underline;
+}
+
+/* --- MAIN CONTENT --- */
+.main-content {
+  margin-left: 18%;        /* se aliniază lângă sidebar */
+  flex: 1;
+  padding: 2rem;
+  background-color: #111;            /* text întunecat pe fundal deschis */
+  min-height: 100vh;
+}
+
+/* Header */
+header h1 {
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Pagini (wrapper) */
+.page {
+  max-width: 800px;
+  margin: auto;
+  color: inherit;
+}
+
+/* --- RESPONSIV --- */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;        /* ascunde sidebar pe mobil */
+  }
+  .main-content {
+    margin-left: 0;       /* full-width pe mobil */
+  }
+}

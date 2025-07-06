@@ -1,0 +1,86 @@
+/* src/styles/MyPosts.css */
+
+/* Container pagină */
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  background-color: #101010;
+  min-height: 100vh;
+}
+
+/* Titlu pagină */
+.page > h2 {
+  color: #eee;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Lista de postări cu bullet-uri */
+.page ul {
+  list-style: disc inside;
+  padding: 0;
+  margin: 0;
+  width: 500px;
+  max-width: 90%;
+}
+
+/* Fiecare element al listei */
+.page ul li {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: #1f1f1f;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.page ul li:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+}
+
+/* Link-ul din fiecare item */
+.page ul li a {
+  display: block;
+  text-decoration: none;
+}
+
+/* Culoare titlu (strong) */
+.page ul li a strong {
+  color: #04a2ff;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* Culoare excerpt (span) */
+.page ul li a span {
+  color: #ccc;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+/* Underline la hover pentru întreg link-ul */
+.page ul li a:hover {
+  text-decoration: underline;
+}
+
+/* Responsivitate */
+@media (max-width: 600px) {
+  .page ul {
+    width: 100%;
+  }
+  .page ul li {
+    padding: 0.75rem;
+  }
+}
+
+.post-thumb {
+  width: 100%;
+  max-height: 150px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}

@@ -1,0 +1,75 @@
+.post-details {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+  margin-bottom: 1.5rem;
+}
+
+.edit-button {
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+.pd-title {
+  margin-bottom: 8px;
+}
+.pd-author {
+  margin-top: 0;
+  margin-bottom: 24px;
+  color: #ffffff;
+  font-style: italic;
+}
+.pd-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.pd-image {
+  width: calc(50% - 8px);
+  height: auto;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+.pd-description {
+   white-space: pre-wrap;
+  line-height: 1.6;
+  color: #ffffff;
+}
+
+/* YouTube embed area */
+.pd-video {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 */
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  border-radius: 4px;
+}
+.pd-video iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Spațiu între video și imagini */
+.pd-video + .pd-images {
+  margin-top: 1rem;
+}
+
+/* Galerie imagini */
+.pd-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+.pd-image {
+  width: calc(33.333% - 8px);
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 4px;
+}

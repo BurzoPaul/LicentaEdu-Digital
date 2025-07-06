@@ -1,0 +1,52 @@
+/* Container de postări — grid fluid */
+.posts-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    /* câte coloane încape, fiecare minim 150px, apoi se împarte spaţiul */
+  gap: 0.2rem;  /* spaţiu uniform și mai generos */
+  padding: 1rem;
+  justify-items: center;
+}
+
+/* Card individual cu aspect-ratio pătrat */
+.post-card {
+  position: relative;
+  width: 100%;           /* ocupă lățimea din “minmax” */
+  aspect-ratio: 1 / 1;   /* păstrează raport 1:1, fără să setăm height manual */
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.post-card:hover {
+  transform: scale(1.05);
+}
+
+/* Imagine dynamică */
+.post-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.post-card:hover .post-image {
+  transform: scale(1.1);
+}
+
+/* Titlu adaptiv */
+.post-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 0.5rem;
+  color: #fff;
+  font-size: 1rem;                 /* responsive cu rem */
+  font-weight: bold;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.4);  /* mai vizibil pe imagini */
+  text-shadow: 0 0 4px rgba(0,0,0,0.8);
+  box-sizing: border-box;
+}

@@ -1,0 +1,15 @@
+/* src/styles/Header.css */
+.app-header {
+  background-color: #202020; /* un gri-închis aproape negru */
+  color: #fff;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.user-greeting {
+  font-size: 1rem;
+}
+
