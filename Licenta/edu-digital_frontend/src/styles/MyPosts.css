@@ -1,86 +1,137 @@
-/* src/styles/MyPosts.css */
+.my-posts-container {
+  max-width: 1100px;
+  margin: 2.5rem auto;
+  padding: 1.25rem;
+  background-color: #ffffff11;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  color: #fff;
+}
 
-/* Container pagină */
-.page {
+h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #ffffff;
+}
+
+.no-posts {
+  text-align: center;
+  font-style: italic;
+  color: #ccc;
+}
+
+.my-posts-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  justify-content: center;
+}
+
+.my-post-item {
+  width: 250px;
+  background-color: #1e1e1e;
+  border-radius: 0.625rem;
+  padding: 0.875rem;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 2rem 1rem;
-  background-color: #101010;
-  min-height: 100vh;
+  align-items: flex-start;
+  transition: transform 0.3s ease;
 }
 
-/* Titlu pagină */
-.page > h2 {
-  color: #eee;
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  text-align: center;
+.my-post-item:hover {
+  transform: scale(1.02);
 }
 
-/* Lista de postări cu bullet-uri */
-.page ul {
-  list-style: disc inside;
-  padding: 0;
-  margin: 0;
-  width: 500px;
-  max-width: 90%;
-}
-
-/* Fiecare element al listei */
-.page ul li {
-  margin-bottom: 1rem;
-  padding: 1rem;
-  background-color: #1f1f1f;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.page ul li:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.7);
-}
-
-/* Link-ul din fiecare item */
-.page ul li a {
-  display: block;
-  text-decoration: none;
-}
-
-/* Culoare titlu (strong) */
-.page ul li a strong {
-  color: #04a2ff;
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
+.my-post-item label {
+  width: 100%;
+  cursor: pointer;
   display: block;
 }
 
-/* Culoare excerpt (span) */
-.page ul li a span {
-  color: #ccc;
-  font-size: 1rem;
-  line-height: 1.4;
-}
-
-/* Underline la hover pentru întreg link-ul */
-.page ul li a:hover {
-  text-decoration: underline;
-}
-
-/* Responsivitate */
-@media (max-width: 600px) {
-  .page ul {
-    width: 100%;
-  }
-  .page ul li {
-    padding: 0.75rem;
-  }
+.my-post-item input[type="checkbox"] {
+  transform: scale(1.5);
+  margin-bottom: 10px;
+  accent-color: #2196f3;
 }
 
 .post-thumb {
   width: 100%;
-  max-height: 150px;
+  height: 160px;
   object-fit: cover;
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+/* Titlu postare */
+.my-post-item strong {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #eee;
+  display: block;
+  text-align: center;
+  pointer-events: none;
+}
+
+.email-section {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #444;
+}
+
+.email-section h4 {
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+/* ✅ input email stilizat ca în PostDetails */
+.email-section input[type="text"] {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background: #222;
+  color: #fff;
+  box-sizing: border-box;
+  margin-bottom: 0.75rem;
+}
+
+.send-button {
+  padding: 0.625rem 1.25rem;
+  font-size: 1rem;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.send-button:hover {
+  background-color: #0c7cd5;
+}
+
+.feedback-msg {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-weight: bold;
+  text-align: center;
+  background-color: #fefefe20;
+  color: #f2f2f2;
+}
+
+.shared-emails {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+.shared-email-item {
+  list-style: disc;
+  margin-left: 18px;
 }

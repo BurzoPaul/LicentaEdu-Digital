@@ -1,47 +1,50 @@
 .post-details {
-  max-width: 800px;
+  max-width: 900px;
   margin: 40px auto;
-  padding: 0 20px;
-  margin-bottom: 1.5rem;
+  padding: 0 16px;
+  font-size: 1rem;
 }
 
-.edit-button {
-  display: inline-block;
-  margin-top: 0.5rem;
-}
+/* Titlu și autor */
 .pd-title {
+  font-size: 2rem;
   margin-bottom: 8px;
 }
+
 .pd-author {
   margin-top: 0;
   margin-bottom: 24px;
-  color: #ffffff;
+  color: #aaa;
   font-style: italic;
 }
-.pd-images {
+
+/* Taguri */
+.post-tags {
   display: flex;
+  background-color: transparent;
   flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-.pd-image {
-  width: calc(50% - 8px);
-  height: auto;
-  object-fit: cover;
-  border-radius: 4px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-}
-.pd-description {
-   white-space: pre-wrap;
-  line-height: 1.6;
-  color: #ffffff;
+  gap: 8px;
+  margin: 12px 0;
 }
 
-/* YouTube embed area */
+.tag {
+  background-color: #dbeafe;
+  color: #1e3a8a;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.tag:hover {
+  background-color: #bfdbfe;
+}
+
+/* Responsive video */
 .pd-video {
   position: relative;
   width: 100%;
-  padding-bottom: 56.25%; /* 16:9 */
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
   margin-bottom: 1.5rem;
   overflow: hidden;
   border-radius: 4px;
@@ -55,21 +58,78 @@
   border: none;
 }
 
-/* Spațiu între video și imagini */
-.pd-video + .pd-images {
-  margin-top: 1rem;
-}
-
-/* Galerie imagini */
+/* Imagini */
 .pd-images {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   margin-bottom: 1.5rem;
+  justify-content: center;
 }
 .pd-image {
-  width: calc(33.333% - 8px);
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  border-radius: 4px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+/* Descriere */
+.pd-description {
+  white-space: pre-wrap;
+  line-height: 1.75;
+  color: #ffffff;
+  margin-bottom: 24px;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+/* Buton editare */
+.edit-button {
+  display: inline-block;
+  margin-bottom: 16px;
+  padding: 8px 16px;
+  background-color: #04a2ff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+}
+.edit-button:hover {
+  background-color: #027ccc;
+}
+
+/* Zona email share */
+.email-share {
+  background: #1a1a1a;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+.email-share input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #000;
+  color: white;
+  font-size: 0.95rem;
+}
+.send-button {
+  background: #04a2ff;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.send-button:hover {
+  background-color: #027ccc;
+}
+
+.feedback-msg {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #0f0;
 }

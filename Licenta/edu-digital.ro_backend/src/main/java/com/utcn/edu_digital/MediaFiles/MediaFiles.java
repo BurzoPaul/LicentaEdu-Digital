@@ -27,10 +27,9 @@ public class MediaFiles {
     @Column(name = "size")
     private long size;
 
-    // Datele binare ale fișierului - salvate în baza de date
     @Lob
     @Column(name = "data", columnDefinition = "LONGBLOB")
-    @JsonIgnore // Excludem din serializarea JSON pentru a evita răspunsuri mari
+    @JsonIgnore
     private byte[] data;
 
     @ManyToOne

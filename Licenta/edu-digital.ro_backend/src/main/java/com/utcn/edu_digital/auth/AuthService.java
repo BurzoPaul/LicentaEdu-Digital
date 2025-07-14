@@ -51,8 +51,6 @@ public class AuthService {
         String clientIP = httpRequest.getRemoteAddr();
         String login = request.getLogin();
 
-        // ...validări și brute-force check...
-
         Optional<User> userOpt = userRepository.findByEmailOrName(login, login);
         if (userOpt.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOpt.get().getPassword())) {
             loginAttemptService.loginFailed(clientIP);
@@ -62,10 +60,10 @@ public class AuthService {
         loginAttemptService.loginSucceeded(clientIP);
         User user = userOpt.get();
 
-        // 🔑 Generează JWT cu email + nume în payload
+        // Generează JWT
         String token = jwtService.generateToken(user);
 
-        // 📤 Returnează token-ul
+        //Returnează token-ul
         return ResponseEntity.ok(token);
 
     }

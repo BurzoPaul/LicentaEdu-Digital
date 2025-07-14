@@ -1,26 +1,24 @@
-// src/components/CreatePostComp.jsx
 import React, { useState, useContext, useEffect } from "react";
-import { useNavigate }                        from "react-router-dom";
-import { AuthContext }                        from "../context/AuthContext";
-import "../styles/CreatePost.css";             // your existing styles
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+import "../styles/CreatePost.css";
 
 export default function CreatePostComp() {
   const { user, token, isLoading } = useContext(AuthContext);
-  const navigate                   = useNavigate();
+  const navigate = useNavigate();
 
-  // redirect if not logged in
   useEffect(() => {
     if (!isLoading && !token) navigate("/login");
   }, [token, isLoading, navigate]);
 
-  const [title, setTitle]             = useState("");
+  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [videoUrl, setVideoUrl]       = useState("");     // ← new
-  const [files, setFiles]             = useState([]);     // File objects
-  const [previews, setPreviews]       = useState([]);     // image URLs
-  const [feedback, setFeedback]       = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
+  const [tags, setTags] = useState(""); // ✅ TAGS
+  const [files, setFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
+  const [feedback, setFeedback] = useState("");
 
-  // image previews
   useEffect(() => {
     if (!files.length) {
       setPreviews([]);
@@ -35,7 +33,6 @@ export default function CreatePostComp() {
     setFiles(prev => prev.filter((_, idx) => idx !== i));
   };
 
-  // helper to extract YouTube ID
   const extractVideoID = url => {
     const m = url.match(/[?&]v=([^&]+)/);
     return m ? m[1] : null;
@@ -44,6 +41,7 @@ export default function CreatePostComp() {
   const handleSubmit = async e => {
     e.preventDefault();
     setFeedback("");
+
     if (!user?.id) {
       setFeedback("⚠️ Trebuie să te autentifici.");
       return;
@@ -52,8 +50,9 @@ export default function CreatePostComp() {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
-    formData.append("videoUrl", videoUrl);              // ← append videoUrl
+    formData.append("videoUrl", videoUrl);
     formData.append("userId", user.id);
+    formData.append("tags", tags); // ✅ TAGS
     files.forEach(f => formData.append("files", f));
 
     try {
@@ -62,7 +61,9 @@ export default function CreatePostComp() {
         headers: { Authorization: `Bearer ${token}` },
         body: formData
       });
+
       if (!res.ok) throw new Error(await res.text());
+
       const created = await res.json();
       setFeedback("✅ Postarea a fost creată!");
       setTimeout(() => navigate(`/posts/${created.id}`), 1200);
@@ -96,7 +97,19 @@ export default function CreatePostComp() {
           />
         </div>
 
-        {/* YouTube URL field */}
+        {/* 🔹 Tag input */}
+        <div className="tag-field">
+          <label>
+            Taguri (ex: game, lab, unity):
+            <input
+              type="text"
+              placeholder="ex: game,lab,ai"
+              value={tags}
+              onChange={e => setTags(e.target.value)}
+            />
+          </label>
+        </div>
+
         <div className="video-field">
           <label>
             Link YouTube:
@@ -109,7 +122,6 @@ export default function CreatePostComp() {
           </label>
         </div>
 
-        {/* Live embedded preview */}
         {extractVideoID(videoUrl) && (
           <div className="video-preview">
             <iframe
@@ -121,7 +133,6 @@ export default function CreatePostComp() {
           </div>
         )}
 
-        {/* image previews with delete */}
         {previews.length > 0 && (
           <div className="preview-images">
             {previews.map((url, i) => (

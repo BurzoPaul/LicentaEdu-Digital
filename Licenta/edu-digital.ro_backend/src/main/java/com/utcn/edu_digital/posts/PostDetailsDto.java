@@ -8,5 +8,6 @@ public record PostDetailsDto(
         int authorId,
         String authorName,
         List<String> imageUrls,
-        String videoUrl
+        String videoUrl,
+        String tags
 ) {}

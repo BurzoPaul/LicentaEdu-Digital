@@ -24,12 +24,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
 
-                // 2. Forţează canal sigur: orice HTTP → HTTPSS
-//                .requiresChannel(channel -> channel
-//                        .anyRequest().requiresSecure()
-//                )
-
-                // 3. Headerele de securitate deja configurate (CSP, XSS, HSTS etc.)
+                // 2. Headerele de securitate deja configurate (CSP, XSS, HSTS etc.)
                 .headers(headers -> headers
                         .contentSecurityPolicy(csp -> csp
                                 .policyDirectives(
@@ -57,7 +52,7 @@ public class SecurityConfig {
                         ))
                 )
 
-                // 4. Permisiuni de acces
+                // 3. Permisiuni de acces
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll()
                 );

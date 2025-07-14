@@ -1,16 +1,15 @@
 // src/components/Sidebar.jsx
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "../assets/logoEdu-digital.png"
 import "../styles/Sidebar.css";
 
 const Sidebar = () => {
-  const navigate = useNavigate();
   const isAuth = !!sessionStorage.getItem("token");
 
   const handleLogout = () => {
    sessionStorage.removeItem("token");
-   navigate("/login");
+   window.location.href = "/login";
  };
   return (
     <div className="sidebar">

@@ -1,40 +1,66 @@
-.gallery {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 16px;
-  padding: 20px;
+.post-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  max-width: 400px;
+  width: 100%;
 }
 
 .post-card {
-  width: 180px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(6, 2, 2, 0.1);
+  display: flex;
+  flex-direction: column;
   transition: transform 0.3s ease;
+  margin: 10px;
 }
 
 .post-card:hover {
   transform: scale(1.05);
 }
 
-.post-card-link {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-}
-
 .post-image {
   width: 100%;
-  height:100%;
-  /*height: 120px;*/
+  height: 220px; /* sau altă valoare constantă */
   object-fit: cover;
   display: block;
 }
 
 .post-title {
-  padding: 8px;
+  padding: 8px 12px;
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   background-color: #fff;
+}
+
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 12px;
+  background-color: #fafafa;
+}
+
+.tag {
+  background-color: #e0e7ff;
+  color: #1e3a8a;
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tag:hover {
+  background-color: #c7d2fe;
+}
+
+.tag.clickable {
+  cursor: pointer;
+}
+
+.tag.clickable:hover {
+  background-color: #c7d2fe; /* păstrează nuanța */
 }

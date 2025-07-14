@@ -9,7 +9,7 @@ public class PostDTO {
     private int id;
     private String titlu;
     private String imagineUrl;
-    private String videoUrl;            // <-- nou
+    private String videoUrl;
 
     public PostDTO(Posts post) {
         this.id = post.getId();

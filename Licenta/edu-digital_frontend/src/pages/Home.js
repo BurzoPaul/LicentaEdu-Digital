@@ -3,7 +3,7 @@ import React from "react";
 import Posts from "../components/Posts";
 
 const Home = () => {
-  return <Posts />;
+  return <Posts showSearchBar={true} />;
 };
 
 export default Home;

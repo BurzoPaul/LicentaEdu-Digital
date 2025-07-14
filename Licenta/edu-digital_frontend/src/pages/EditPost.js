@@ -1,31 +1,28 @@
-// src/pages/EditPost.jsx
 import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate }               from "react-router-dom";
 import { AuthContext }                           from "../context/AuthContext";
 import "../styles/EditPost.css";
 
 export default function EditPost() {
-  const { id }          = useParams();
+  const { id } = useParams();
   const { user, token } = useContext(AuthContext);
-  const navigate        = useNavigate();
+  const navigate = useNavigate();
 
-  // State-uri
-  const [title, setTitle]             = useState("");
+  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [videoUrl, setVideoUrl]       = useState("");      // ← nou
-  const [existingImages, setExistingImages] = useState([]); // { id, url }
-  const [toDelete, setToDelete]       = useState([]);      // mediaId-uri
-  const [newFiles, setNewFiles]       = useState([]);      // File objects
-  const [previews, setPreviews]       = useState([]);      // URL blobs pentru newFiles
-  const [feedback, setFeedback]       = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
+  const [tags, setTags] = useState(""); // ✅ NOU
+  const [existingImages, setExistingImages] = useState([]);
+  const [toDelete, setToDelete] = useState([]);
+  const [newFiles, setNewFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
+  const [feedback, setFeedback] = useState("");
 
-  // Helper pentru video ID
   const extractVideoID = url => {
     const m = url.match(/[?&]v=([^&]+)/);
     return m ? m[1] : null;
   };
 
-  // 1) Încarcă postarea
   useEffect(() => {
     if (!token) return navigate("/login");
     fetch(`http://localhost:8080/posts/${id}`, {
@@ -38,8 +35,8 @@ export default function EditPost() {
       .then(dto => {
         setTitle(dto.title);
         setDescription(dto.description);
-        setVideoUrl(dto.videoUrl || "");                // ← prefill video
-        // extrage imagini
+        setVideoUrl(dto.videoUrl || "");
+        setTags(dto.tags || ""); // ✅ preluăm tagurile
         const imgs = dto.imageUrls.map(url => {
           const m = url.match(/\/media\/(\d+)\/view/);
           return { id: m ? Number(m[1]) : null, url };
@@ -49,7 +46,6 @@ export default function EditPost() {
       .catch(() => navigate("/"));
   }, [id, token, navigate]);
 
-  // 2) Preview pentru noile fișiere
   useEffect(() => {
     if (!newFiles.length) {
       setPreviews([]);
@@ -60,23 +56,19 @@ export default function EditPost() {
     return () => urls.forEach(u => URL.revokeObjectURL(u));
   }, [newFiles]);
 
-  // marchează imagine existentă pentru ștergere
   const removeExisting = idx => {
     setToDelete(prev => [...prev, existingImages[idx].id]);
     setExistingImages(prev => prev.filter((_, i) => i !== idx));
   };
 
-  // șterge un fișier nou
   const removeNew = idx => {
     setNewFiles(prev => prev.filter((_, i) => i !== idx));
   };
 
-  // 3) Submit
   const handleSubmit = async e => {
     e.preventDefault();
     setFeedback("");
 
-    // a) delete media vechi
     for (const mediaId of toDelete) {
       await fetch(`http://localhost:8080/media/${mediaId}`, {
         method: "DELETE",
@@ -84,11 +76,12 @@ export default function EditPost() {
       });
     }
 
-    // b) update text + videoUrl
     const textForm = new URLSearchParams();
     textForm.append("title", title);
     textForm.append("description", description);
-    textForm.append("videoUrl", videoUrl);             // ← append videoUrl
+    textForm.append("videoUrl", videoUrl);
+    textForm.append("tags", tags); // ✅ trimitem tagurile
+
     const res1 = await fetch(`http://localhost:8080/posts/update/${id}`, {
       method: "PUT",
       headers: {
@@ -97,13 +90,13 @@ export default function EditPost() {
       },
       body: textForm.toString()
     });
+
     if (!res1.ok) {
       const err = await res1.text();
       setFeedback(`⚠️ Eroare la actualizare text: ${err}`);
       return;
     }
 
-    // c) upload media noi
     if (newFiles.length) {
       const mediaForm = new FormData();
       newFiles.forEach(f => mediaForm.append("files", f));
@@ -123,7 +116,6 @@ export default function EditPost() {
     setTimeout(() => navigate(`/posts/${id}`), 1200);
   };
 
-  // loading guard
   if (!token) return null;
   if (!title && !description && existingImages.length === 0 && feedback === "")
     return <div>Loading…</div>;
@@ -131,7 +123,6 @@ export default function EditPost() {
   return (
     <div className="edit-post-page">
       <form onSubmit={handleSubmit} className="edit-post-form">
-        {/* Titlu */}
         <div className="title-field">
           <input
             type="text"
@@ -141,38 +132,23 @@ export default function EditPost() {
           />
         </div>
 
-        {/* Autor */}
         <div className="author-field">Autor: {user.name}</div>
 
-        {/* Galerie unificată (existente + noi) */}
         <div className="preview-images">
           {existingImages.map((img, i) => (
             <div key={`old-${i}`} className="preview-item">
               <img src={img.url} className="preview-img" alt="" />
-              <button
-                type="button"
-                className="remove-btn"
-                onClick={() => removeExisting(i)}
-              >
-                ×
-              </button>
+              <button type="button" className="remove-btn" onClick={() => removeExisting(i)}>×</button>
             </div>
           ))}
           {previews.map((url, i) => (
             <div key={`new-${i}`} className="preview-item">
               <img src={url} className="preview-img" alt="" />
-              <button
-                type="button"
-                className="remove-btn"
-                onClick={() => removeNew(i)}
-              >
-                ×
-              </button>
+              <button type="button" className="remove-btn" onClick={() => removeNew(i)}>×</button>
             </div>
           ))}
         </div>
 
-        {/* Descriere */}
         <div className="description-field">
           <textarea
             value={description}
@@ -181,7 +157,19 @@ export default function EditPost() {
           />
         </div>
 
-        {/* YouTube URL */}
+        {/* 🔹 INPUT TAGURI */}
+        <div className="tag-field">
+          <label>
+            Taguri (ex: game,unity,lab):
+            <input
+              type="text"
+              value={tags}
+              onChange={e => setTags(e.target.value)}
+              placeholder="ex: game,lab,react"
+            />
+          </label>
+        </div>
+
         <div className="video-field">
           <label>
             Link YouTube:
@@ -194,7 +182,6 @@ export default function EditPost() {
           </label>
         </div>
 
-        {/* Live embed preview */}
         {extractVideoID(videoUrl) && (
           <div className="video-preview">
             <iframe
@@ -206,7 +193,6 @@ export default function EditPost() {
           </div>
         )}
 
-        {/* Upload noi imagini */}
         <div className="file-input">
           <label>
             Adaugă imagini:
@@ -222,18 +208,12 @@ export default function EditPost() {
           </label>
         </div>
 
-        {/* Feedback */}
         {feedback && (
-          <div
-            className={`feedback ${
-              feedback.startsWith("✅") ? "success" : "error"
-            }`}
-          >
+          <div className={`feedback ${feedback.startsWith("✅") ? "success" : "error"}`}>
             {feedback}
           </div>
         )}
 
-        {/* Buton Salvează */}
         <button type="submit" className="edit-button">
           Salvează modificările
         </button>

@@ -30,6 +30,9 @@ public class Posts {
     @Column(name = "video_url", nullable = true)
     private String videoUrl;
 
+    @Column(name = "tags")
+    private String tags;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

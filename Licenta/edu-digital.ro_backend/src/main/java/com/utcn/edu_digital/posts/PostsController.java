@@ -1,7 +1,7 @@
 package com.utcn.edu_digital.posts;
 
-import com.utcn.edu_digital.posts.PostDTO;
-import com.utcn.edu_digital.posts.PostDetailsDto;
+import com.utcn.edu_digital.email.EmailService;
+import com.utcn.edu_digital.email.PostEmailLogDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +14,13 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/posts")
 public class PostsController {
+
     @Autowired
     private PostsService postsService;
+
+    @Autowired
+    private EmailService emailService;
+
 
     /**
      * Creează o postare nouă cu fișiere media
@@ -24,12 +29,13 @@ public class PostsController {
     public ResponseEntity<?> createPost(
             @RequestParam("title") String title,
             @RequestParam("description") String description,
-            @RequestParam(value = "videoUrl", required = false) String videoUrl,     // ← adăugat
+            @RequestParam(value = "videoUrl", required = false) String videoUrl,
             @RequestParam(value = "files", required = false) List<MultipartFile> files,
-            @RequestParam("userId") int userId
+            @RequestParam("userId") int userId,
+            @RequestParam(value = "tags", required = false) String tags // ← NOU
     ) {
         try {
-            Posts post = postsService.savePost(title, description, videoUrl, files, userId);
+            Posts post = postsService.savePost(title, description, videoUrl, files, userId, tags);
             return ResponseEntity.ok(post);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Validation error: " + e.getMessage());
@@ -41,7 +47,6 @@ public class PostsController {
             return ResponseEntity.status(500).body("Internal server error: " + e.getMessage());
         }
     }
-
 
     /**
      * Returnează toate postările
@@ -60,7 +65,7 @@ public class PostsController {
     }
 
     /**
-     * Returnează o postare după ID (inclusiv authorId)
+     * Returnează o postare după ID
      */
     @GetMapping("/{id}")
     public ResponseEntity<PostDetailsDto> getPostById(@PathVariable int id) {
@@ -76,7 +81,8 @@ public class PostsController {
                             post.getUser().getId(),
                             post.getUser().getName(),
                             urls,
-                            post.getVideoUrl()    // ← must pass the stored URL here
+                            post.getVideoUrl(),
+                            post.getTags() // ← NOU
                     );
                     return ResponseEntity.ok(dto);
                 })
@@ -97,18 +103,18 @@ public class PostsController {
     }
 
     /**
-     * Actualizează o postare existentă (doar titlu și descriere)
+     * Actualizează o postare existentă (inclusiv taguri)
      */
-    // în PostsController.java
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updatePost(
             @PathVariable int id,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String description,
-            @RequestParam(required = false) String videoUrl   // ← adăugat
+            @RequestParam(required = false) String videoUrl,
+            @RequestParam(required = false) String tags // ← NOU
     ) {
         try {
-            Posts updatedPost = postsService.updatePost(id, title, description, videoUrl);
+            Posts updatedPost = postsService.updatePost(id, title, description, videoUrl, tags);
             return ResponseEntity.ok(updatedPost);
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body("Error: " + e.getMessage());
@@ -116,7 +122,6 @@ public class PostsController {
             return ResponseEntity.status(500).body("Internal server error: " + e.getMessage());
         }
     }
-
 
     /**
      * Adaugă fișiere media la o postare existentă
@@ -155,4 +160,44 @@ public class PostsController {
             return ResponseEntity.status(500).build();
         }
     }
+
+    /**
+     * Caută postări după titlu, autor sau keyword (inclusiv taguri)
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<PostDetailsDto>> searchPosts(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) String keyword) {
+
+        List<PostDetailsDto> results = postsService.searchPosts(title, author, keyword);
+        return ResponseEntity.ok(results);
+    }
+
+    @PostMapping("/share-multiple")
+    public ResponseEntity<?> shareMultiplePostsByEmail(
+            @RequestParam List<Integer> postIds,
+            @RequestParam List<String> emails
+    ) {
+        List<Posts> posts = postsService.getPostsByIds(postIds);
+
+        if (posts.isEmpty()) {
+            return ResponseEntity.badRequest().body("Nicio postare validă selectată.");
+        }
+
+        try {
+            emailService.sendMultiplePostsToEmails(posts, emails);
+            return ResponseEntity.ok("✅ Emailurile au fost trimise cu succes.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("❌ Eroare la trimitere: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/email-log/{userId}")
+    public ResponseEntity<List<PostEmailLogDto>> getEmailLogsForUser(@PathVariable int userId) {
+        List<PostEmailLogDto> logs = postsService.getEmailLogsForUser(userId);
+        return ResponseEntity.ok(logs);
+    }
+
+
 }
